@@ -329,9 +329,11 @@ func (xRefTable *XRefTable) DereferenceDict(o types.Object) (types.Dict, error) 
 	if err != nil || o == nil {
 		return nil, err
 	}
-
 	d, ok := o.(types.Dict)
 	if !ok {
+		if d, ok := o.(types.ObjectStreamDict); ok {
+			return d.Dict, nil
+		}
 		return nil, errors.Errorf("pdfcpu: dereferenceDict: wrong type %T <%v>", o, o)
 	}
 
